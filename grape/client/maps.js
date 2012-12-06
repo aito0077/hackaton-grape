@@ -8,23 +8,29 @@
 
 
     Template.mapa.rendered = function(){
-        console.log('map rendered');
 
+       console.log('map rendered');
        //find_pais_indicador('ARG', 'NY.ADJ.NNTY.KD');
-       initialize();
+       var ret = Iniciativas.find().fetch();
+       initialize(ret);
        //google.maps.event.addDomListener(window, 'load', initialize);
     };
 
 
     //Google maps
-    function initialize() {
+    function initialize(options) {
 
-        var results = [
-            {lat: -34.584111, long:-58.427194},
-            {lat: -34.574642, long:-58.441264},
-            {lat: -34.573333, long:-58.441564},
-            {lat: -34.574444, long:-58.444564}
-        ];
+        var results = [];
+        _.each(options,function(iniciativa){
+            if (typeof iniciativa.lat === 'undefined'){
+            }else{
+                results.push(
+                    {lat:iniciativa.lat,long:iniciativa.lon}
+                )
+            }
+            console.log(iniciativa.lat);
+        })
+        
         
         var latlng = new google.maps.LatLng(my_latitude, my_longitude);
         var myOptions = {
@@ -41,7 +47,6 @@
             }
             my_mark.setPosition(e.latLng);
             Session.set('latLng',e.latLng);
-            console.log(e.latLng);
         });
 
         _.each(results, function(model) {
@@ -62,7 +67,6 @@
             navigator.geolocation.getCurrentPosition(function(position) {
                 my_latitude = position.coords.latitude;
                 my_longitude = position.coords.longitude;
-                console.log('Mi latitude: '+my_latitude+' - longitud: '+my_longitude);
                 var pos = new google.maps.LatLng(my_latitude, my_longitude);
                 map.setCenter(pos);
                 map.setZoom(zoom_my_location);

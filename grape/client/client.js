@@ -79,14 +79,6 @@ Template.iniciativaForm.location = function(){
 };
 
 /**
- * Iniciativas
- */
-
-Template.iniciativas.list = function(){
-  return Iniciativas.find();
-}
-
-/**
  * Layout
  */
 
@@ -205,7 +197,7 @@ Template.iniciativaForm.events({
 
     Session.set('latLng',undefined);
     latlon = undefined ;
-    Session.set('tareas',null); 
+    Session.set('tareas',[]); 
     tareas = undefined;
   }
 });

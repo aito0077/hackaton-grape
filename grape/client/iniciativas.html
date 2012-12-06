@@ -36,12 +36,10 @@
   <ul class="media-list">
     <li class="media">
       <a class="pull-left" href="#">
-        <img class="media-object" src="http://placehold.it/64x64">
+        <img class="media-object profile-picture" src="http://placehold.it/64x64" data-profile="{{creador}}">
       </a>
       <div class="media-body">
-        <h1 class="media-heading size1">
-          {{titulo}}
-        </h1>
+        <h1 class="media-heading size1">{{titulo}}</h1>
         <span class="label label-success">Medio Ambiente</span>
         <span class="label label-info">Educación</span>
         <span class="label label-warning">Desarrollo</span>
@@ -89,14 +87,7 @@
 
 </template>
 
-<template name="iniciativas">
-  {{#each list}}
-  <li>{{ titulo }}</li>
-  {{/each}}
-</template>
-
 <template name="iniciativaForm">
-  <div class="row">
   <div class="span4 center">
     <form class="form-horizontal" id="IniciativaForm">
       <fieldset>
@@ -145,7 +136,6 @@
 
     </form>
   </div>
-</div>
 </template>
 
 <template name="tareasForm">
