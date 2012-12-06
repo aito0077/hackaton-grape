@@ -35,7 +35,7 @@
   {{#with detail }}
   <ul class="media-list">
     <li class="media">
-      <a class="pull-left" href="#">
+      <a class="pull-left ver-perfil" data-perfil="{{ creador._id}}" href="#{{ creador._id}}">
         <img class="media-object profile-picture" src="http://placehold.it/64x64" data-profile="{{creador}}">
       </a>
       <div class="media-body">
@@ -51,6 +51,9 @@
         <div class="estadoBadge step normal"><span>Convocatoria</span></div>
         <div class="estadoBadge step current"><span>Desarrollo</span></div>
         <div class="estadoBadge step next"><span>Conclusión</span></div>
+        {{#if soyCreador }}
+          soy el creador!
+        {{/if}}
         <br><br>
         {{> sesumaron}}
       </div>
@@ -65,7 +68,7 @@
     <h3 class="size3">Se sumaron a este proyecto</h3>
     <ul class="thumbnails">
       {{#each participantes}}
-      <li><a href="#" class""><img src="http://placehold.it/100x100" alt=""></a></li>
+      <li><a href="#" data-perfil="{{_id}}" class="ver-perfil"><img src="http://placehold.it/100x100" alt=""></a></li>
       {{/each}}
     </ul>
   </div>
