@@ -54,6 +54,13 @@ Template.ListadoIniciativas.imagenPrincipal = function(){
   return Session.get('imagen-principal');
 }
 
+Template.ItemListadoInicio.events({
+    'click .iniciativa': function(event){
+        Session.set('page','descripcion_iniciativa');
+        Session.set('iniciativa',$(event.currentTarget).attr('data-id'));
+    }
+});
+
 Template.ListadoIniciativas.events({
   'click .iniciativa': function(event){
     Session.set('page','descripcion_iniciativa');
@@ -67,7 +74,7 @@ Template.ListadoIniciativas.events({
  * Formulario Iniciativa
  */
 
- Template.iniciativaForm.location = function(){
+Template.iniciativaForm.location = function(){
   return Session.get("location");
 };
 
@@ -75,16 +82,15 @@ Template.ListadoIniciativas.events({
  * Iniciativas
  */
 
- Template.iniciativas.list = function(){
+Template.iniciativas.list = function(){
   return Iniciativas.find();
 }
-
 
 /**
  * Layout
  */
 
- Template.layout.home = function(){
+Template.layout.home = function(){
   return Session.equals('page','home');
 }
 
@@ -105,71 +111,19 @@ Template.layout.perfil = function(){
  */
 
 
+/**
+ * filepicker
+ */
+
 /*
  * Ultimos por categoria
  */
 
- Template.inicio.UltimosPorCategoria = function(categoria, limite){
-  console.log(categoria);
+Template.inicio.UltimosPorCategoria = function(categoria, limite){
   var ret = Iniciativas.find({categoria:categoria},{sort:{fecha_creacion:-1}});
   var items = ret.fetch().slice(0,3);
   return Template.ultimasIniciativas({listado:items,count:ret.count()});
 }
-
-
-Template.medioAmbienteInicio.count = function(){
-  return Iniciativas.find({categoria:"Medio Ambiente"}).count();
-}
-Template.medioAmbienteInicio.listado = function(){
-  return Iniciativas.find({categoria:"Medio Ambiente"});
-}
-
-Template.medioAmbienteInicio.events({
-  'click .iniciativa': function(event){
-    Session.set('page','descripcion_iniciativa');
-    Session.set('iniciativa',$(event.currentTarget).attr('data-id'));
-  }
-})
-
-Template.educacionInicio.count = function(){
-  return Iniciativas.find({categoria:"Educacion"}).count();
-}
-Template.educacionInicio.listado = function(){
-  return Iniciativas.find({categoria:"Educacion"});
-}
-Template.educacionInicio.events({
-  'click .iniciativa': function(event){
-    Session.set('page','descripcion_iniciativa');
-    Session.set('iniciativa',$(event.currentTarget).attr('data-id'));
-  }
-})
-
-
-Template.desarrolloInicio.count = function(){
-  return Iniciativas.find({categoria:"Desarrollo"}).count();
-}
-Template.desarrolloInicio.listado = function(){
-  return Iniciativas.find({categoria:"Desarrollo"});
-}
-Template.desarrolloInicio.events({
-  'click .iniciativa': function(event){
-    Session.set('page','descripcion_iniciativa');
-    Session.set('iniciativa',$(event.currentTarget).attr('data-id'));
-  }
-})
-
-Template.arteCulturaInicio.count = function(){
-  return Iniciativas.find({categoria:"Arte y Cultura"}).count();
-}
-Template.arteCulturaInicio.listado = function(){
-  return Iniciativas.find({categoria:"Arte y Cultura"});
-}
-Template.arteCulturaInicio.events({
-  'click .iniciativa': function(event){
-    Session.set('page','descripcion_iniciativa');
-    Session.set('iniciativa',$(event.currentTarget).attr('data-id'));
-  }
-})
 
 Template.info.mostrarMensaje = function(){
   return Session.get('mostrarMensaje');
