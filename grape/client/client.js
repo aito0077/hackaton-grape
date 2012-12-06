@@ -177,7 +177,8 @@ Template.iniciativaForm.events({
       mostrarMensaje('Debes ingresar al sitio para participar :)', 'error');
       return;
     }
-    var latlon = Session.get('latLng') | false;
+    var latlon = Session.get('latLng');
+    console.log(latlon);
     var Iniciativa = {
       titulo:$('#iniTitulo').val(),
       descripcion:$('#iniDescripcion').val(),
@@ -187,7 +188,7 @@ Template.iniciativaForm.events({
       tareas:Session.get('tareas')
     };
 
-    if( latlon !== false ){
+    if( typeof latlon !== "undefined" ){
       Iniciativa.lat = latlon.$a;
       Iniciativa.lon = latlon.ab;
     }
