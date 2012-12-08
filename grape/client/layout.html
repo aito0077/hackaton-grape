@@ -22,6 +22,21 @@
   </div>
   {{/if }}
   
+  {{#if nuevaIniciativa}}
+  <div class="row">
+    <div class="span4">
+      {{#if currentUser }}
+      {{> iniciativaForm}}
+      {{else}}
+      {{loginButtons}}
+      {{/if}}
+    </div>
+    <div class="span4">
+      {{> mapa}}
+    </span>
+  </div>
+  {{/if}}
+
   {{#if perfil}}
   <!--Definimos la página de Perfil-->
   <div class="row">
