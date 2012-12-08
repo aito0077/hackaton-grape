@@ -93,10 +93,10 @@
   <div class="span12">
     <div class="tabbable">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">Medio Ambiente</a></li>
-        <li><a href="#tab2" data-toggle="tab">Educación</a></li>
-        <li><a href="#tab3" data-toggle="tab">Desarrollo Social</a></li>
-        <li><a href="#tab4" data-toggle="tab">Arte y Cultura</a></li>
+        <li class="active"><a id="ma" href="#tab1" data-toggle="tab">Medio Ambiente</a></li>
+        <li><a id="ed" href="#tab2" data-toggle="tab">Educación</a></li>
+        <li><a id="de" href="#tab3" data-toggle="tab">Desarrollo Social</a></li>
+        <li><a id="ac" href="#tab4" data-toggle="tab">Arte y Cultura</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active " id="tab1">
@@ -109,7 +109,10 @@
         			{{> customMap }}
         		</div>
         		<div class="span5">
-        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+                    <div id="medio"></div>
+                    {{#if chart_ma  'medio'}}
+                        {{> charts_ma }}
+                    {{/if}}
         		</div>
         	</div>
 			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
@@ -124,7 +127,11 @@
         			{{> customMap }}
         		</div>
         		<div class="span4">
-        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+
+                    <div id="educacion"></div>
+                    {{#if chart_ed  'educacion'}}
+                        {{> charts_ed }}
+                    {{/if}}
         		</div>
         	</div>
 			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
@@ -139,7 +146,10 @@
         			{{> customMap }}
         		</div>
         		<div class="span4">
-        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+        <div id="desarrollo"></div>
+                    {{#if chart_de  'desarrollo'}}
+                        {{> charts_de }}
+                    {{/if}}
         		</div>
         	</div>
 			{{{ UltimosPorCategoria "Educacion" 3 }}}
@@ -154,7 +164,10 @@
         			{{> customMap }}
         		</div>
         		<div class="graficos span4">
-        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+                    <div id="arte"></div>
+                    {{#if chart_ac  'arte'}}
+                        {{> charts_ac }}
+                    {{/if}}
         		</div>
         	</div>
 			{{{ UltimosPorCategoria "Educacion" 3 }}}

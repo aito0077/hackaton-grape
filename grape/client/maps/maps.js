@@ -46,7 +46,8 @@ function initialize(uuid, list) {
 
     var results = [];
     _.each(list,function(iniciativa){
-        if (typeof iniciativa.lat === 'undefined'){
+        if (typeof iniciativa.latitud === 'undefined'){
+
         }else{
             results.push({
                 doc:iniciativa
@@ -88,7 +89,7 @@ function initialize(uuid, list) {
 
     _.each(results, function(model) {
         console.log(model.doc.titulo);
-        var latlng_mark = new google.maps.LatLng(model.doc.lat,model.doc.lon);
+        var latlng_mark = new google.maps.LatLng(model.doc.latitud, model.doc.longitud);
         var marker = new google.maps.Marker({
             title:model.titulo,
             position: latlng_mark,
