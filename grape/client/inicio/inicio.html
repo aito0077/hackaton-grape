@@ -1,0 +1,165 @@
+<template name="inicio">
+	<div class="span12">
+		{{> heroUnit}}
+		{{> tabs}}
+	</div>
+</template>
+
+<template name="heroUnit">
+  <div class="hero-unit welcomeMsg">
+    <div class="msgContainer left center">
+      <h1>Organizá</h1>
+      <p>Usá nuestras herramientas para crear Iniciativas en tu comunidad</p>
+      <div class="botones"><a class="registerBtn" href="#">Enviá tu Iniciativa</a></div>
+    </div>
+    <div class="msgContainer right center">
+      <h1>Participá</h1>
+      <p>En las iniciativas creadas por tus vecinos y organizaciones</p>
+      <div class="botones"><a class="registerBtn" href="#">Explorá Iniciativas</a></div>
+    </div>
+  </div>
+  <div class="intro center">Ayudamos a personas con iniciativas para su comunidad y a quienes quieren colaborar con sus habilidades en fines comunitarios.</div>
+</template>
+
+<template name="categorias">
+	<div class="Categoria">
+		<ul class="thumbnails">
+			<li class="span3">
+				<div class="thumbnail"><img src="http://minamistudios.com/hack/images/medioAmbiente.png" alt="">
+					<h4>Medio Ambiente</h4>
+				</div>
+				{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
+			</li>
+			<li class="span3">
+				<div class="thumbnail"><img src="http://minamistudios.com/hack/images/educacion.png" alt="">
+					<h4>Educaci&oacute;n</h4>
+				</div>
+				{{{ UltimosPorCategoria "Educacion" 3 }}}
+			</li>
+			<li class="span3">
+				<div class="thumbnail"><img src="http://minamistudios.com/hack/images/desarrollo.png" alt="">
+					<h4>Desarrollo Social</h4>
+
+				</div>
+				{{{ UltimosPorCategoria "Desarrollo" 3 }}}
+			</li>
+			<li class="span3">
+				<div class="thumbnail"><img src="http://minamistudios.com/hack/images/artes.png" alt="">
+					<h4>Arte y Cultura</h4>
+				</div>
+				{{{ UltimosPorCategoria "Arte y Cultura" 3 }}}
+			</li>
+		</ul>
+	</div>
+</template>
+
+<template name="mapa">
+	<div id="map_canvas" class="span7 map"></div>
+</template>
+
+<template name="ultimasIniciativas">
+	<div class="span3">
+		<h5>Iniciativas <span class="badge">{{count}}</span></h5> 
+		<ul class="media-list">
+			{{#each listado }}
+			{{> ItemListadoInicio}}
+			{{/each}}
+		</ul>
+	</div>
+</template>
+
+<template name="ItemListadoInicio">
+	<li class="media">
+		<a class="pull-left" href="#">
+			<img class="media-object ver-perfil" data-perfil={{ creador }} src="http://minamistudios.com/hack/images/persona1.png">
+		</a>
+		<div class="media-body">
+			<h3><a class="iniciativa" data-id="{{_id}}" href="#">{{titulo}}</a></h3>
+			<div class="media">
+				<p class="descSmall">{{descripcion}}</p>
+				<span><img src="http://minamistudios.com/hack/images/praise.png"> <span class="small2">123</small> </span>
+			</div>
+		</div>
+	</li>
+</template>
+
+<template name="customMap">
+	{{{ show 3 "Medio Ambiente"}}}
+</template>
+
+<!--Inicia template para Gráficos-->
+<template name="tabs">
+  <div class="span12">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab1" data-toggle="tab">Medio Ambiente</a></li>
+        <li><a href="#tab2" data-toggle="tab">Educación</a></li>
+        <li><a href="#tab3" data-toggle="tab">Desarrollo Social</a></li>
+        <li><a href="#tab4" data-toggle="tab">Arte y Cultura</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active " id="tab1">
+        	<p>
+			<strong>Emisiones CO2 per capita</strong><br>
+            Iniciativas que están ayudando a solucionar este problema
+        	</p>
+        	<div class="row">
+        		<div class="span6">
+        			{{> customMap }}
+        		</div>
+        		<div class="span5">
+        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+        		</div>
+        	</div>
+			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
+		</div>
+        <div class="tab-pane" id="tab2">
+        	<p>
+				<strong>Índice de alumnos por docente, escuela secundaria</strong><br>
+				Iniciativas que están ayudando a solucionar este problema
+			</p>
+        	<div class="row">
+        		<div class="span4">
+        			{{> customMap }}
+        		</div>
+        		<div class="span4">
+        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+        		</div>
+        	</div>
+			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
+		</div>
+        <div class="tab-pane" id="tab3">
+	        <p>
+				<strong>Desempleo</strong><br>
+	            Iniciativas que están ayudando a solucionar este problema
+			</p>
+        	<div class="row">
+        		<div class="span4">
+        			{{> customMap }}
+        		</div>
+        		<div class="span4">
+        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+        		</div>
+        	</div>
+			{{{ UltimosPorCategoria "Educacion" 3 }}}
+		</div>
+        <div class="tab-pane" id="tab4">
+        	<p>
+				<strong>Arte y Cultura</strong><br>
+	            Iniciativas que están ayudando a solucionar este problema
+			</p>
+        	<div class="row">
+        		<div class="graficos span4">
+        			{{> customMap }}
+        		</div>
+        		<div class="graficos span4">
+        			<img src="http://minamistudios.com/hack/images/graficoMedioAmbiente.png">
+        		</div>
+        	</div>
+			{{{ UltimosPorCategoria "Educacion" 3 }}}
+		</div>
+      </div>
+    </div>
+    <div class="right"></div>
+  </div>
+</template>
