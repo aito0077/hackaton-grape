@@ -6,22 +6,27 @@ my_longitude = -58.20996;
 posisionate_in_my_location = true
 zoom_my_location = 13;
 
+Template.contenedorMapa.created = function(){
+        var filteredList = Iniciativas.find({categoria:'Medio Ambiente'},  {latitude: { $exists: true}});
+        Session.set('map_list', filteredList.fetch());
+        var uuid = Meteor.uuid();
+        Session.set('current-uuid',uuid);
+}
+
+
 
 Template.customMap.show = function(customSize,listFilter){
-    console.log(customSize);
-    console.log(listFilter);
-    var filteredList = Iniciativas.find({categoria:listFilter});
+    var filteredList = Iniciativas.find({categoria:listFilter},  {latitude: { $exists: true}});
     Session.set('map_list', filteredList.fetch());
     var uuid = Meteor.uuid();
     Session.set('current-uuid',uuid);
-    var template = Template.contenedorMapa({size:customSize, uuid:uuid});
-    return template;
 }
 
 Template.contenedorMapa.uuid = function(){return Session.get('current-uuid');}
 
 Template.contenedorMapa.rendered = function(){
     console.log('contenedorMapa rendered');
+
     initialize(Session.get('current-uuid'), Session.get('map_list'));
 }
 
@@ -63,6 +68,8 @@ function initialize(uuid, list) {
         mapMaker: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
+    console.log(uuid);
+    console.dir($('#'+uuid));
     map = new google.maps.Map(document.getElementById(uuid), myOptions);
 
     google.maps.event.addListener(map, 'click', function(e) {

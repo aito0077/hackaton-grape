@@ -4,10 +4,7 @@ Session.set("selected",null);
 Session.set("page","home");
 Session.set('mostrarMensaje',false);
 
-Session.set('chart-uuid', 'medio');
 Session.set('chart-categoria', "Reciclado");
-Session.set('chart_ma', "medio");
- 
 
 function mostrarMensaje(texto,tipo){
   Session.set('mostrarMensaje',true);

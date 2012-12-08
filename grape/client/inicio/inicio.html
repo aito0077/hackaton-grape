@@ -85,95 +85,38 @@
 </template>
 
 <template name="customMap">
-	{{{ show 3 "Medio Ambiente"}}}
 </template>
 
 <!--Inicia template para Gráficos-->
 <template name="tabs">
-  <div class="span12">
-    <div class="tabbable">
-      <ul class="nav nav-tabs">
-        <li class="active"><a id="ma" href="#tab1" data-toggle="tab">Medio Ambiente</a></li>
-        <li><a id="ed" href="#tab2" data-toggle="tab">Educación</a></li>
-        <li><a id="de" href="#tab3" data-toggle="tab">Desarrollo Social</a></li>
-        <li><a id="ac" href="#tab4" data-toggle="tab">Arte y Cultura</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="tab-pane active " id="tab1">
+    <div class="span12">
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a id="ma" href="#tab1" data-toggle="tab">Medio Ambiente</a></li>
+                <li><a id="ed" href="#tab2" data-toggle="tab">Educación</a></li>
+                <li><a id="de" href="#tab3" data-toggle="tab">Desarrollo Social</a></li>
+                <li><a id="ac" href="#tab4" data-toggle="tab">Arte y Cultura</a></li>
+            </ul>
+            <div class="tab-content">
+                {{> tab_body }}
+            </div>
+        </div>
+        <div class="right"></div>
+    </div>
+</template>
+
+<template name="tab_body">
         	<p>
-			<strong>Emisiones CO2 per capita</strong><br>
+			<strong>{{descripcion_indicador}}</strong><br>
             Iniciativas que están ayudando a solucionar este problema
         	</p>
         	<div class="row">
         		<div class="span6">
-        			{{> customMap }}
+                    {{> contenedorMapa }}
         		</div>
         		<div class="span5">
-                    <div id="medio"></div>
-                    {{#if chart_ma  'medio'}}
-                        {{> charts_ma }}
-                    {{/if}}
+                    {{> charts }}
         		</div>
         	</div>
-			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
-		</div>
-        <div class="tab-pane" id="tab2">
-        	<p>
-				<strong>Índice de alumnos por docente, escuela secundaria</strong><br>
-				Iniciativas que están ayudando a solucionar este problema
-			</p>
-        	<div class="row">
-        		<div class="span4">
-        			{{> customMap }}
-        		</div>
-        		<div class="span4">
-
-                    <div id="educacion"></div>
-                    {{#if chart_ed  'educacion'}}
-                        {{> charts_ed }}
-                    {{/if}}
-        		</div>
-        	</div>
-			{{{ UltimosPorCategoria "Medio Ambiente" 3 }}}
-		</div>
-        <div class="tab-pane" id="tab3">
-	        <p>
-				<strong>Desempleo</strong><br>
-	            Iniciativas que están ayudando a solucionar este problema
-			</p>
-        	<div class="row">
-        		<div class="span4">
-        			{{> customMap }}
-        		</div>
-        		<div class="span4">
-        <div id="desarrollo"></div>
-                    {{#if chart_de  'desarrollo'}}
-                        {{> charts_de }}
-                    {{/if}}
-        		</div>
-        	</div>
-			{{{ UltimosPorCategoria "Educacion" 3 }}}
-		</div>
-        <div class="tab-pane" id="tab4">
-        	<p>
-				<strong>Arte y Cultura</strong><br>
-	            Iniciativas que están ayudando a solucionar este problema
-			</p>
-        	<div class="row">
-        		<div class="graficos span4">
-        			{{> customMap }}
-        		</div>
-        		<div class="graficos span4">
-                    <div id="arte"></div>
-                    {{#if chart_ac  'arte'}}
-                        {{> charts_ac }}
-                    {{/if}}
-        		</div>
-        	</div>
-			{{{ UltimosPorCategoria "Educacion" 3 }}}
-		</div>
-      </div>
-    </div>
-    <div class="right"></div>
-  </div>
+			{{{ UltimosPorCategoria current_categoria 3 }}}
 </template>

@@ -88,8 +88,6 @@ Meteor.methods({
                 iniciativa
             );
         });
-        console.dir(paises);
-        console.dir(tipo_indicador.indicador);
  
         var data_pais_indicador = indicadores_latin_america.find({
             'Country Code': {'$in': paises},    
@@ -101,7 +99,6 @@ Meteor.methods({
             collection[indicador['Country Code']] = indicador;
         });
 
-        console.dir(collection);
         var tipo_indicador = tipo_indicador;
         var iniciativas = iniciativas_data;
 
@@ -194,7 +191,6 @@ Meteor.methods({
                 latlng: ''+latitud+','+longitud+'',
                 sensor: true
             }}); 
-            console.dir(result);
             var pais = 'Argentina',
                 provincia = '',
                 localidad = '',
