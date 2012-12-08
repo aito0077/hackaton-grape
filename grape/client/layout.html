@@ -1,61 +1,58 @@
 <template name="layout">
-    {{#if home}}
-    <!--Llamamos a la página de Inicio-->
-    <div class="row">
-      <div class="span12">
-       {{> info}}
-       {{> inicio}}
-     </div>
+  {{#if home}}
+  <!--Llamamos a la página de Inicio-->
+  <div class="row">
+    <div class="span12">
+     {{> inicio}}
    </div>
-   {{/if}}
+ </div>
+ {{/if}}
 
-   {{#if descripcion_iniciativa}}
-   <!--Llamamos a la página de Inicio-->
-   <div class="row">
-    <div class="span8">
-      {{> info}}
-      {{> iniciativa}}
-    </div>
-    <div class="span3"> 
-      {{> sidebarDatos}}
-    </div>
+ {{#if descripcion_iniciativa}}
+ <!--Llamamos a la página de Inicio-->
+ <div class="row">
+  <div class="span8">
+    {{> iniciativa}}
   </div>
-  {{/if }}
-  
-  {{#if nuevaIniciativa}}
-  <div class="row">
-    <div class="span4">
-      {{#if currentUser }}
-      {{> iniciativaForm}}
-      {{else}}
-      {{loginButtons}}
-      {{/if}}
-    </div>
-    <div class="span4">
-      {{> mapa}}
-    </span>
+  <div class="span3"> 
+    {{> sidebarDatos}}
   </div>
-  {{/if}}
+</div>
+{{/if }}
 
-  {{#if perfil}}
-  <!--Definimos la página de Perfil-->
-  <div class="row">
-    <div class="span8">
-      {{> info}}
-      {{> perfil}}
-    </div>
-    <div class="span3 "> 
-      {{> sidebarPerfil}}
-    </div>
+{{#if nuevaIniciativa}}
+<div class="row">
+  <div class="span4">
+    {{#if currentUser }}
+    {{> iniciativaForm}}
+    {{else}}
+    {{loginButtons}}
+    {{/if}}
   </div>
-  {{/if}}
-  <!-- -->
-  {{#if iniciativas }}
-  <!-- Listado de Iniciativas -->
-  <div class="row">
-   <div class="span12">
-    {{> info}}
-    {{> ListadoIniciativas}}
+  <div class="span4">
+    {{> customMap }}
+  </span>
+</div>
+{{/if}}
+
+{{#if perfil}}
+<!--Definimos la página de Perfil-->
+<div class="row">
+  <div class="span8">
+    {{> perfil}}
   </div>
-  {{/if}}
+  <div class="span3 "> 
+    {{> sidebarPerfil}}
+  </div>
+</div>
+{{/if}}
+<!-- -->
+{{#if iniciativas }}
+<!-- Listado de Iniciativas -->
+<div class="row">
+ <div class="span12">
+  {{> ListadoIniciativas}}
+</div>
+</div>
+{{/if}}
 </template>

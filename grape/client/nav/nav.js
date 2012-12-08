@@ -16,6 +16,15 @@ Template.nav.events({
   },
   'click .logout':function(event){
     Meteor.logout();
+  },
+  'click .nuevaIniciativa':function(event){
+    Session.set('page','nuevaIniciativa');
+  },
+
+  'click .ver-perfil':function(event){
+    Session.set('page','perfil');
+    Session.set('perfil',$(event.currentTarget).attr('data-perfil'));
+    console.log($(event.currentTarget).attr('data-perfil'));
   }
 });
 
@@ -23,14 +32,5 @@ Template.nav.userId = function(){
   return Meteor.userId();
 }
 
-Template.nav.events({
-  'click .ver-perfil':function(event){
-    Session.set('page','nuevaIniciativa');
-  },
-  'click .ver-perfil':function(event){
-    Session.set('page','perfil');
-    Session.set('perfil',$(event.currentTarget).attr('data-perfil'));
-    console.log($(event.currentTarget).attr('data-perfil'));
-  }
-});
+
 

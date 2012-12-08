@@ -13,13 +13,19 @@
   {{> nav}}
   <div class="pageMargins"></div>
   <div class="container">
+    {{> info}}
     {{> layout}}
   </div>
 </body>
 
 <template name="info">
-  {{#if mostrarMensaje}}
-  {{> mensaje}}
+  <div class="row">
+    <div class="span12">
+      {{#if mostrarMensaje}}
+      {{> mensaje}}
+    </div>
+  </div>
+
   {{/if}}
 </template>
 

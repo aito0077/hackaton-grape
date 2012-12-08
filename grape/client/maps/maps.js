@@ -6,19 +6,23 @@ my_longitude = -58.20996;
 posisionate_in_my_location = true
 zoom_my_location = 13;
 
+
 Template.customMap.show = function(customSize,listFilter){
     console.log(customSize);
     console.log(listFilter);
-
     var filteredList = Iniciativas.find({categoria:listFilter});
-    console.log(filteredList);
     Session.set('map_list', filteredList.fetch());
-    var template = Template.contenedorMapa({size:customSize});
+    var uuid = Meteor.uuid();
+    Session.set('current-uuid',uuid);
+    var template = Template.contenedorMapa({size:customSize, uuid:uuid});
     return template;
 }
 
+Template.contenedorMapa.uuid = function(){return Session.get('current-uuid');}
+
 Template.contenedorMapa.rendered = function(){
-    initialize(Session.get('map_list'));
+    console.log('contenedorMapa rendered');
+    initialize(Session.get('current-uuid'), Session.get('map_list'));
 }
 
 /*
@@ -30,7 +34,6 @@ Template.inicio.UltimosPorCategoria = function(categoria, limite){
 */
 
 Template.mapa.rendered = function(){
-    console.log('map rendered');
     //find_pais_indicador('ARG', 'NY.ADJ.NNTY.KD');
     var ret = Iniciativas.find().fetch();
     initialize(ret);
@@ -39,7 +42,7 @@ Template.mapa.rendered = function(){
 
 
 //Google maps
-function initialize(list) {
+function initialize(uuid, list) {
 
     var results = [];
     _.each(list,function(iniciativa){
@@ -59,7 +62,7 @@ function initialize(list) {
         mapMaker: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map = new google.maps.Map(document.getElementById(uuid), myOptions);
 
     google.maps.event.addListener(map, 'click', function(e) {
         if (!my_mark) {
