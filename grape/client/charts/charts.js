@@ -9,6 +9,15 @@
         }
     }
 
+    Template.tab_body.UltimosPorCategoriaTab = function() {
+      console.log('Ultimos por categoria tab');
+      var categoria = Session.get('current_categoria');
+      var ret = Iniciativas.find({categoria:categoria},{sort:{fecha_creacion:-1}});
+      var items = ret.fetch().slice(0,3);
+      return Template.ultimasIniciativas({listado:items,count:ret.count()});
+
+    }
+
     Template.tab_body.descripcion_indicador = function() {
         var tipo_indicador =  Session.get('tipo_indicador');
         return tipo_indicador.categoria;

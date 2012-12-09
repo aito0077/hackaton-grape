@@ -42,10 +42,10 @@ Template.iniciativaForm.events({
       console.log(error);
     });
 
-    Session.set('latLng',undefined);
-    latlon = undefined ;
+    Session.set('latLng', null);
+    latlon = null;
     Session.set('tareas',[]); 
-    tareas = undefined;
+    tareas = null;
   }
 });
 

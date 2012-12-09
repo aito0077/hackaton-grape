@@ -2,8 +2,11 @@ Template.sesumaron.participantes = function(){
   return Participantes.find({iniciativa:Session.get('iniciativa')});
 }
 
-Template.iniciativa.soyCreador = function () {
-  var creador = Meteor.users.findOne(this.creador);
+Template.iniciativa.soyCreador = function (id_creador) {
+  var creador = Meteor.users.findOne(id_creador);
+  if(typeof creador == 'undefined') {
+    return false;
+  }
   return creador._id == Meteor.userId();
 };
 

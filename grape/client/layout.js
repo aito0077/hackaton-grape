@@ -21,3 +21,8 @@ Template.layout.perfil = function(){
 Template.layout.nuevaIniciativa = function(){
   return Session.equals('page','nuevaIniciativa');
 }
+
+Template.layout.categorias = function(){
+  return Session.equals('page','categorias');
+}
+
