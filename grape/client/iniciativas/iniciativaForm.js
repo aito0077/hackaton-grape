@@ -35,8 +35,8 @@ Template.iniciativaForm.events({
     };
 
     if( typeof latlon !== "undefined" ){
-      Iniciativa.lat = latlon.$a;
-      Iniciativa.lon = latlon.ab;
+      Iniciativa.latitud = latlon.$a;
+      Iniciativa.longitud = latlon.ab;
     }
     var res = Meteor.call('crearIniciativa',Iniciativa,function(error,iniciativa){
       console.log(error);
