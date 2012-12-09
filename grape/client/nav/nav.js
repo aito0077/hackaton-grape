@@ -32,5 +32,9 @@ Template.nav.userId = function(){
   return Meteor.userId();
 }
 
+Template.nav.nuevaIniciativa = function(){
+  return Session.equals('page','nuevaIniciativa');
+}
+
 
 
