@@ -46,4 +46,8 @@ Template.sidebarDatos.events({
 });
 
 
+// client code: ping heartbeat every 5 seconds
+Meteor.setInterval(function () {
+      Meteor.call('keepalive', Session.get('user_id'));
+}, 5000);
 

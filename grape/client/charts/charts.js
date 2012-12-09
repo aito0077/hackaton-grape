@@ -66,34 +66,49 @@
      });
 
     Template.charts.rendered = function(){
+        var self = this;
         console.log('renderizando grafico');
         if (Meteor.is_client) {
 
             console.log('chart-categoria');
-            Meteor.call('find_pais_indicador', [], Session.get('chart-categoria'), function(err,response) {
+            var function_received = function() {
+                console.log('volvio vamos a renderizar');
+            };
+            var function_callback = function(err, response) {
+                console.log('callback');
                 if(err) {
                     Session.set('serverDataResponse', "Error:" + err.reason);
+                    console.log('Error: '+err.reason);
                     return;
                 }
                 
-                Session.set('current_categoria', response.current_categoria);
-                Session.set('tipo_indicador', response.tipo_indicador);
-                Session.set('series', response.series);
-                Session.set('iniciativas', response.iniciativas);
+                console.dir(response);
+                Template.charts.current_categoria = response.current_categoria;
+                Template.charts.tipo_indicador = response.tipo_indicador;
+                Template.charts.series = response.series;
+                Template.charts.iniciativas = response.iniciativas;
+
                 try {
-                    render_chart();
+                    Template.charts.render_chart();
                 } catch(e) {
                     console.log(e);
                 }
-            });
+
+            };
+
+
+            Meteor.apply('find_pais_indicador',[[], Session.get('chart-categoria')], {
+                wait: false,
+                onResultReceived: function_received
+                }, function_callback );
         }
     }
 
-    function render_chart() {
+    Template.charts.render_chart = function() {
         console.log('render chart');
-        var series = Session.get('series');
-        var iniciativas = Session.get('iniciativas');
-        var tipo_indicador = Session.get('tipo_indicador');
+        var series = Template.charts.series;
+        var iniciativas = Template.charts.iniciativas;
+        var tipo_indicador = Template.charts.tipo_indicador;
         var div_tag = Session.get('element_tag');
         var options = {
             indicator_description: tipo_indicador.descripcion,
@@ -103,18 +118,18 @@
             y_title: '',
         };
 
-        agregar_iniciativas(series, iniciativas);
-        render_line_chart(series, options);
+        Template.charts.agregar_iniciativas(series, iniciativas);
+        Template.charts.render_line_chart(series, options);
 
     }
 
 
-    function render_line_chart(data, options) {
+    Template.charts.render_line_chart= function(data, options) {
         var self = this;
         console.log('div: '+options.element_tag);
         var element = $('#'+options.element_tag);
 
-         var grafico = new Highcharts.StockChart({
+         Template.charts.grafico = new Highcharts.StockChart({
             chart: {
                 type: 'spline',
                 renderTo: options.element_tag,
@@ -175,7 +190,7 @@
         });
     }
 
-    function agregar_iniciativas(series, iniciativas) {
+    Template.charts.agregar_iniciativas = function(series, iniciativas) {
         var icon_image = 'medioAmbienteSmall.png';
         switch(Session.get('current_categoria')) {
             case "Medio Ambiente":

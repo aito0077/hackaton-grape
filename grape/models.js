@@ -1,8 +1,6 @@
 var Iniciativas = new Meteor.Collection("Iniciativas");
 var Participantes = new Meteor.Collection("Participantes");
-var indicadores = new Meteor.Collection('indicadores'), 
-    countries = new Meteor.Collection('countries'),
-    indicadores_latin_america = new Meteor.Collection('indicadores_latin_america');
+var Connections = new Meteor.Collection('Connections');
 
 Iniciativas.allow({
 	insert: function (userId, doc) {
@@ -35,211 +33,233 @@ if (Meteor.isClient) {
     Meteor.subscribe("Iniciativas");
 }
 
-Meteor.methods({
-	crearIniciativa: function (options) {
-		options = options || {};
-		/*
-		    var Iniciativa = {
-      titulo:$('#iniTitulo').val(),
-      descripcion:$('#iniDescripcion').val(),
-      categoria:$('#iniCategoria').val(),
-      tipo:$('#iniTipo').val(),
-      titulo:$('#iniTitulo').val(),
-      tareas:Session.get('tareas')
-    };
-    */
-		if(! (
-			typeof options.titulo === "string" && options.titulo.length 
-			&& typeof options.descripcion === "string" && options.descripcion.length
-			&& typeof options.categoria === "string" && options.categoria.length
-			&& typeof options.tipo === "string" && options.tipo.length
-		)){
-			throw new Meteor.Error(400,'Falta un dato');
-		}
-	    if (Meteor.userId() === null){
-	      mostrarMensaje('Debes ingresar al sitio para participar :)', 'error');
-	      return;
-	    }
-	    options.creador = Meteor.userId();
-	    options.fecha_creacion = Date.now();
-   		return Iniciativas.insert(options);
-   	},
+if (Meteor.isServer) {
+var countries = new Meteor.Collection('countries'),
+    indicadores = new Meteor.Collection('indicadores'), 
+    indicadores_latin_america = new Meteor.Collection('indicadores_latin_america');
 
-	generarIniciativa: function (options) {
-   		return Iniciativas.insert(options);
-   	},
-
-
-    find_pais_indicador: function(paises, tipo) {
-        console.log(tipo);
-        if(!paises.length) {
-            paises = ['PER', 'BOL', 'COL', 'BRA', 'CHL', 'ARG'];
-        }
-        console.log(tipo);
-
-        var tipo_indicador = find_indicador_por_tipo(tipo);
-        var iniciativas_paises_tipo = Iniciativas.find({
-            'pais': {'$in': paises},    
-            'tipo': tipo
-        });
-        var iniciativas_data = [];
-        iniciativas_paises_tipo.forEach(function (iniciativa) {
-            iniciativas_data.push(
-                iniciativa
-            );
-        });
- 
-        var data_pais_indicador = indicadores_latin_america.find({
-            'Country Code': {'$in': paises},    
-            'Indicator Code': tipo_indicador.indicador
-        });
-
-        var collection = {};
-        data_pais_indicador.forEach(function (indicador) {
-            collection[indicador['Country Code']] = indicador;
-        });
-
-        var tipo_indicador = tipo_indicador;
-        var iniciativas = iniciativas_data;
-
-                //Inicio  procesamiento series
-                var paises_code = _.keys(collection);
-                var first_element = collection[_.first(paises_code)];
-                var descripcion_indicador = tipo_indicador.descripcion;
-                var keys = _.keys(first_element);
-                var periodos = [];
-                _.each(keys, function(periodo) {
-                    if(!_.contains([ '_id', 'Country Name', 'Country Code', 'Indicator Name', 'Indicator Code'], periodo)) { 
-                        if(parseInt(periodo) >= 2000) {
-                            periodos.push(periodo.toString());
-                        }
-                    }
-                });
-
-                var series = [];
-                _.each(collection, function(country) {
-                    var country_data = [],
-                        value = 0,
-                        old_value = 0;
-                    _.each(periodos, function(periodo) {
-                        if(periodo > 2010) {
-                            old_value = value;
-                            value = country[periodo] || old_value;
-                        } else {
-                            value = country[periodo] || 0;
-                        }
-                        try {
-                            value = parseFloat(value);
-                        } catch(e) {console.log(e);}
-                        country_data.push({
-                            x: Date.UTC(periodo, 0, 1),
-                            y: value||0
-                        }); 
-                    });
-                    country_data.push({
-                        x: Date.UTC(2013, 0, 1),
-                        y: old_value
-                    }); 
-                    var serie = {
-                            name: country['Country Name'],
-                            id: country['Country Code'],
-                            data: country_data
-                        };
-                    series.push(serie);
-               });
-
-        return {
-                current_categoria: tipo_indicador.categoria,
-                tipo_indicador: tipo_indicador,
-                series: series,
-                iniciativas: iniciativas
+    Meteor.methods({
+        crearIniciativa: function (options) {
+            options = options || {};
+            /*
+                var Iniciativa = {
+          titulo:$('#iniTitulo').val(),
+          descripcion:$('#iniDescripcion').val(),
+          categoria:$('#iniCategoria').val(),
+          tipo:$('#iniTipo').val(),
+          titulo:$('#iniTitulo').val(),
+          tareas:Session.get('tareas')
         };
-    },
-
-    traer_iniciativas_categoria_pais: function(paises, tipo) {
-        console.log(tipo);
-
-        var iniciativas_paises_tipo = Iniciativas.find({
-            'Country Code': {'$in': paises},    
-            'Indicator Code': cod_indicador    
-        });
-        var data = {};
-        iniciativas_paises_tipo.forEach(function (iniciativa) {
-            data[inciativa['pais']] = iniciativa;
-        });
-        return data;
-    },
-
-
-    traer_ultimas_iniciativas_categoria: function(categoria, limite) {
-        var ret = Iniciativas.find({categoria:categoria},{sort:{fecha_creacion:-1}});
-        var items = ret.fetch().slice(0, limite);
-        var cantidad = ret.count();
-        return {
-            items: items,
-            cantidad: cantidad
-        };
-    },
-
-
-    obtener_pais_desde_localizacion: function (latitud, longitud) {
-        this.unblock();
-        var result = Meteor.http.call(
-            "GET",
-            'http://maps.googleapis.com/maps/api/geocode/json',
-            {params: {
-                latlng: ''+latitud+','+longitud+'',
-                sensor: true
-            }}); 
-            var pais = 'Argentina',
-                provincia = '',
-                localidad = '',
-                status = 200;
-            if (result.statusCode === 200) {
-                var found = false;
-                _.each(result.data.results, function(geo_data) {
-                    if(_.contains(geo_data.types, 'administrative_area_level_2')) {
-                        _.each(geo_data.address_components, function(component) {
-                            if(_.contains(component.types, 'administrative_area_level_2')) {
-                                localidad = component.short_name;
-                            }
-                            if(_.contains(component.types, 'administrative_area_level_1')) {
-                                provincia = component.long_name;
-                            }
-                            if(_.contains(component.types, 'country')) {
-                                pais = component.long_name;
-                            }
-                        });
-                        found = true;
-                    }
-                    if(!found && _.contains(geo_data.types, 'administrative_area_level_1')) {
-                        _.each(geo_data.address_components, function(component) {
-                            if(_.contains(component.types, 'administrative_area_level_1')) {
-                                provincia = component.long_name;
-                            }
-                            if(_.contains(component.types, 'country')) {
-                                provincia = component.long_name;
-                            }
-                        });
-                        found = true;
-                    }
-                    if(!found && _.contains(geo_data.types, 'country')) {
-                        pais = geo_data.formatted_address;
-                    }
-                });
-            } else {
-                status = 300;
+        */
+            if(! (
+                typeof options.titulo === "string" && options.titulo.length 
+                && typeof options.descripcion === "string" && options.descripcion.length
+                && typeof options.categoria === "string" && options.categoria.length
+                && typeof options.tipo === "string" && options.tipo.length
+            )){
+                throw new Meteor.Error(400,'Falta un dato');
             }
+            if (Meteor.userId() === null){
+              mostrarMensaje('Debes ingresar al sitio para participar :)', 'error');
+              return;
+            }
+            options.creador = Meteor.userId();
+            options.fecha_creacion = Date.now();
+            return Iniciativas.insert(options);
+        },
+
+        generarIniciativa: function (options) {
+            return Iniciativas.insert(options);
+        },
+
+
+        find_pais_indicador: function(paises, tipo) {
+            if(this.isSimulation) {
+               return {
+                    current_categoria: "",
+                    tipo_indicador: "",
+                    series: "",
+                    iniciativas: "" 
+                };
+            }
+            console.log('find pais indicador');
+            console.log(tipo);
+            if(!paises.length) {
+                paises = ['PER', 'BOL', 'COL', 'BRA', 'CHL', 'ARG'];
+            }
+            console.log(tipo);
+
+            var tipo_indicador = find_indicador_por_tipo(tipo);
+            var iniciativas_paises_tipo = Iniciativas.find({
+                'pais': {'$in': paises},    
+                'tipo': tipo
+            });
+            var iniciativas_data = [];
+            iniciativas_paises_tipo.forEach(function (iniciativa) {
+                iniciativas_data.push(
+                    iniciativa
+                );
+            });
+     
+            var data_pais_indicador = indicadores_latin_america.find({
+                'Country Code': {'$in': paises},    
+                'Indicator Code': tipo_indicador.indicador
+            });
+
+            var collection = {};
+            data_pais_indicador.forEach(function (indicador) {
+                collection[indicador['Country Code']] = indicador;
+            });
+
+            var tipo_indicador = tipo_indicador;
+            var iniciativas = iniciativas_data;
+
+                    //Inicio  procesamiento series
+                    var paises_code = _.keys(collection);
+                    var first_element = collection[_.first(paises_code)];
+                    var descripcion_indicador = tipo_indicador.descripcion;
+                    var keys = _.keys(first_element);
+                    var periodos = [];
+                    _.each(keys, function(periodo) {
+                        if(!_.contains([ '_id', 'Country Name', 'Country Code', 'Indicator Name', 'Indicator Code'], periodo)) { 
+                            if(parseInt(periodo) >= 2000) {
+                                periodos.push(periodo.toString());
+                            }
+                        }
+                    });
+
+                    var series = [];
+                    _.each(collection, function(country) {
+                        var country_data = [],
+                            value = 0,
+                            old_value = 0;
+                        _.each(periodos, function(periodo) {
+                            if(periodo > 2010) {
+                                old_value = value;
+                                value = country[periodo] || old_value;
+                            } else {
+                                value = country[periodo] || 0;
+                            }
+                            try {
+                                value = parseFloat(value);
+                            } catch(e) {console.log(e);}
+                            country_data.push({
+                                x: Date.UTC(periodo, 0, 1),
+                                y: value||0
+                            }); 
+                        });
+                        country_data.push({
+                            x: Date.UTC(2013, 0, 1),
+                            y: old_value
+                        }); 
+                        var serie = {
+                                name: country['Country Name'],
+                                id: country['Country Code'],
+                                data: country_data
+                            };
+                        series.push(serie);
+                   });
+
             return {
-                status: status,
-                pais: pais,
-                provincia: provincia,
-                localidad: localidad
+                    current_categoria: tipo_indicador.categoria,
+                    tipo_indicador: tipo_indicador,
+                    series: series,
+                    iniciativas: iniciativas
             };
-    }
+        },
+
+        traer_iniciativas_categoria_pais: function(paises, tipo) {
+            console.log(tipo);
+
+            var iniciativas_paises_tipo = Iniciativas.find({
+                'Country Code': {'$in': paises},    
+                'Indicator Code': cod_indicador    
+            });
+            var data = {};
+            iniciativas_paises_tipo.forEach(function (iniciativa) {
+                data[inciativa['pais']] = iniciativa;
+            });
+            return data;
+        },
 
 
-});
+        traer_ultimas_iniciativas_categoria: function(categoria, limite) {
+            var ret = Iniciativas.find({categoria:categoria},{sort:{fecha_creacion:-1}});
+            var items = ret.fetch().slice(0, limite);
+            var cantidad = ret.count();
+            return {
+                items: items,
+                cantidad: cantidad
+            };
+        },
+
+
+        obtener_pais_desde_localizacion: function (latitud, longitud) {
+            this.unblock();
+            var result = Meteor.http.call(
+                "GET",
+                'http://maps.googleapis.com/maps/api/geocode/json',
+                {params: {
+                    latlng: ''+latitud+','+longitud+'',
+                    sensor: true
+                }}); 
+                var pais = 'Argentina',
+                    provincia = '',
+                    localidad = '',
+                    status = 200;
+                if (result.statusCode === 200) {
+                    var found = false;
+                    _.each(result.data.results, function(geo_data) {
+                        if(_.contains(geo_data.types, 'administrative_area_level_2')) {
+                            _.each(geo_data.address_components, function(component) {
+                                if(_.contains(component.types, 'administrative_area_level_2')) {
+                                    localidad = component.short_name;
+                                }
+                                if(_.contains(component.types, 'administrative_area_level_1')) {
+                                    provincia = component.long_name;
+                                }
+                                if(_.contains(component.types, 'country')) {
+                                    pais = component.long_name;
+                                }
+                            });
+                            found = true;
+                        }
+                        if(!found && _.contains(geo_data.types, 'administrative_area_level_1')) {
+                            _.each(geo_data.address_components, function(component) {
+                                if(_.contains(component.types, 'administrative_area_level_1')) {
+                                    provincia = component.long_name;
+                                }
+                                if(_.contains(component.types, 'country')) {
+                                    provincia = component.long_name;
+                                }
+                            });
+                            found = true;
+                        }
+                        if(!found && _.contains(geo_data.types, 'country')) {
+                            pais = geo_data.formatted_address;
+                        }
+                    });
+                } else {
+                    status = 300;
+                }
+                return {
+                    status: status,
+                    pais: pais,
+                    provincia: provincia,
+                    localidad: localidad
+                };
+        },
+
+        keepalive: function (user_id) {
+            if (!Connections.findOne(user_id)) {
+                Connections.insert({user_id: user_id});
+            }
+            Connections.update(user_id, {$set: {last_seen: (new Date()).getTime()}});
+        }
+
+
+    });
+}
 
     function find_indicador_por_tipo(tipo) {
         var tipo_indicador = tipo_indicadores[tipo];
